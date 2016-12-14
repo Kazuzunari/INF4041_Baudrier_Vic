@@ -1,3 +1,5 @@
+package com.esiea.bauvic.inf4041_baudrier_vic.db_handling;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -54,7 +56,7 @@ public class UsefullVrac {
 
 	public static void main(String[] args) {
 		try {
-			//Télécharment du fichier via HTTP
+			//TÃ©lÃ©chargement du fichier via HTTP
 			URL website = new URL("http://binouze.fabrigli.fr/bieres.json");
 			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
 			FileOutputStream fos = new FileOutputStream(path);
@@ -67,11 +69,11 @@ public class UsefullVrac {
 			fr.read(buffer);
 			String jsonContent = String.valueOf(buffer);
 
-			//On génère les tables de correspondance des id
+			//On gÃ©nÃ¨re les tables de correspondance des id
 			//TODO store in a MAP with id as key sqlRequestListCategory
 			//TODO store in a MAP with id as key sqlRequestListCountry
 			
-			//Création de la bière par itération sur le JSON
+			//CrÃ©ation de la biÃ¨re par itÃ©ration sur le JSON
 			JSONArray jarray = new JSONArray(jsonContent);
 			for (int i = 0 ; i<jarray.length() ; i++){
 				JSONObject jo = (JSONObject) jarray.get(i);

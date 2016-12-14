@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         //    launch_get_JSON_network();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_item);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
     }
