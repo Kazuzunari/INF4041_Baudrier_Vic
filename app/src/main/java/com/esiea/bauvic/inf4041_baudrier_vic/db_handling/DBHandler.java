@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.esiea.bauvic.inf4041_baudrier_vic.datas.Biere;
+
 /**
  * Created by Dearth on 13/12/2016.
  */
@@ -101,5 +103,33 @@ public class DBHandler extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS category");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS country");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS biere");
+    }
+
+    //TODO MOVE TO DAO
+    public void insertNewBiere(SQLiteDatabase sqLiteDatabase, Biere biere){
+        StringBuilder sb = new StringBuilder();
+        String insertQuery = "insert into `biere` (" +
+                "note, name, description, dateCreation, pathPhoto, idCategory, idCountry) " +
+                "VALUES ("
+                + biere.getNote()+","
+                + biere.getName()+","
+                + biere.getDescription()+","
+                + biere.getDateCreation()+","
+                + biere.getPhotoPath()+","
+                + getIdOfCategory(biere.getCategory())+","
+                + getIdOfCountry(biere.getCategory())+","
+                + ");";
+    }
+
+    //TODO MOVE TO DAO
+    public String getIdOfCategory(String libelleCategory){
+        //TODO
+        return null;
+    }
+
+    //TODO MOVE TO DAO
+    public String getIdOfCountry(String libelleCountry){
+        //TODO
+        return null;
     }
 }

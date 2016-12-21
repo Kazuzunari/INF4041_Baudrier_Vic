@@ -55,4 +55,17 @@ public class Biere {
 		return this.getPhotoPath();
 	}
 
+    @Override
+    public String toString() {
+        return "Biere{" +
+                "category='" + category + '\'' +
+                ", country='" + country + '\'' +
+                ", dateCreation='" + dateCreation + '\'' +
+                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", note=" + note +
+                ", photoPath='" + photoPath + '\'' +
+                '}';
+    }
+
 }
