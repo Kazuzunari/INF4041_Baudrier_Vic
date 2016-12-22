@@ -1,6 +1,7 @@
 package com.esiea.bauvic.inf4041_baudrier_vic.db_handling;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -111,25 +112,40 @@ public class DBHandler extends SQLiteOpenHelper{
         String insertQuery = "insert into `biere` (" +
                 "note, name, description, dateCreation, pathPhoto, idCategory, idCountry) " +
                 "VALUES ("
-                + biere.getNote()+","
-                + biere.getName()+","
-                + biere.getDescription()+","
-                + biere.getDateCreation()+","
-                + biere.getPhotoPath()+","
-                + getIdOfCategory(biere.getCategory())+","
-                + getIdOfCountry(biere.getCategory())+","
+                + biere.getNote()+",'"
+                + biere.getName()+"','"
+                + biere.getDescription()+"','"
+                + biere.getDateCreation()+"','"
+                + biere.getPhotoPath()+"',"
+                + getIdOfCategory(sqLiteDatabase, biere.getCategory())+","
+                + getIdOfCountry(sqLiteDatabase, biere.getCategory())
                 + ");";
+        sqLiteDatabase.execSQL(insertQuery);
     }
 
     //TODO MOVE TO DAO
-    public String getIdOfCategory(String libelleCategory){
-        //TODO
-        return null;
+    public int getIdOfCategory(SQLiteDatabase sqLiteDatabase, String libelleCategory){
+        String query = "SELECT idCategory " +
+                "FROM category " +
+                "WHERE AliasCategory = '"+libelleCategory+"';";
+        Cursor c = sqLiteDatabase.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            return c.getInt(0);
+        } else {
+            return -1;
+        }
     }
 
     //TODO MOVE TO DAO
-    public String getIdOfCountry(String libelleCountry){
-        //TODO
-        return null;
+    public int getIdOfCountry(SQLiteDatabase sqLiteDatabase, String libelleCountry){
+        String query = "SELECT idCountry " +
+                "FROM country " +
+                "WHERE AliasCountry = '"+libelleCountry+"';";
+        Cursor c = sqLiteDatabase.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            return c.getInt(0);
+        } else {
+            return -1;
+        }
     }
 }
