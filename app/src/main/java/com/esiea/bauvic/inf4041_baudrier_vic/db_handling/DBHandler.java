@@ -2,6 +2,7 @@ package com.esiea.bauvic.inf4041_baudrier_vic.db_handling;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -15,7 +16,7 @@ public class DBHandler extends SQLiteOpenHelper{
 
 
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Biere.db";
+    public static final String DATABASE_NAME = "BiereQuiRoule";
     private static final String CREATE_TABLE_COUNTRY = "CREATE TABLE \"COUNTRY\" (\n" +
             "\t`idCountry`\tINTEGER NOT NULL,\n" +
             "\t`AliasCountry`\tTEXT NOT NULL UNIQUE,\n" +
@@ -63,7 +64,7 @@ public class DBHandler extends SQLiteOpenHelper{
             "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (24,'Pays de Galle');\n" +
             "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (25,'Ecosse');\n" +
             "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (26,'Amérindien');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (27,'Danemark');"
+            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (27,'Danemark'); COMMIT;"
             ;
     private static final String INSERT_CATEGORY = "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (1,'Blonde');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (2,'Blanche');\n" +
@@ -77,7 +78,7 @@ public class DBHandler extends SQLiteOpenHelper{
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (10,'Fruit Beer');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (11,'India Pale Ale');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (12,'Pale Ale');\n" +
-            "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (13,'Irish Stout');"
+            "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (13,'Irish Stout'); COMMIT;"
             ;
 
     public DBHandler(Context context) {
@@ -86,13 +87,24 @@ public class DBHandler extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_TABLE_CATEGORY);
-        sqLiteDatabase.execSQL(INSERT_CATEGORY);
-        sqLiteDatabase.execSQL(CREATE_TABLE_COUNTRY);
-        sqLiteDatabase.execSQL(INSERT_COUNTRY);
-        sqLiteDatabase.execSQL(CREATE_TABLE_BIERE);
-        //this.getClass().getClassLoader().getResource("").openStream().re;
+        try{
+            sqLiteDatabase.execSQL(CREATE_TABLE_CATEGORY);
+            sqLiteDatabase.execSQL(INSERT_CATEGORY);
+            sqLiteDatabase.execSQL(CREATE_TABLE_COUNTRY);
+            sqLiteDatabase.execSQL(INSERT_COUNTRY);
+            sqLiteDatabase.execSQL(CREATE_TABLE_BIERE);
+            //this.getClass().getClassLoader().getResource("").openStream().re;
+            //System.out.println(sqLiteDatabase.inTransaction());
+        } catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
     }
+
+    /*
+    public void onOpen(SQLiteDatabase sqLiteDatabase){
+       // TODO sqLiteDatabase = getWritableDatabase(); //has to be moved the the mainactivity onOpen
+    }
+    */
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int nextVersion) {
@@ -101,51 +113,9 @@ public class DBHandler extends SQLiteOpenHelper{
     }
 
     private void destroyEveryting (SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS category");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS country");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS biere");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS category CASCADE");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS country CASCADE");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS biere CASCADE");
     }
 
-    //TODO MOVE TO DAO
-    public void insertNewBiere(SQLiteDatabase sqLiteDatabase, Biere biere){
-        StringBuilder sb = new StringBuilder();
-        String insertQuery = "insert into `biere` (" +
-                "note, name, description, dateCreation, pathPhoto, idCategory, idCountry) " +
-                "VALUES ("
-                + biere.getNote()+",'"
-                + biere.getName()+"','"
-                + biere.getDescription()+"','"
-                + biere.getDateCreation()+"','"
-                + biere.getPhotoPath()+"',"
-                + getIdOfCategory(sqLiteDatabase, biere.getCategory())+","
-                + getIdOfCountry(sqLiteDatabase, biere.getCategory())
-                + ");";
-        sqLiteDatabase.execSQL(insertQuery);
-    }
-
-    //TODO MOVE TO DAO
-    public int getIdOfCategory(SQLiteDatabase sqLiteDatabase, String libelleCategory){
-        String query = "SELECT idCategory " +
-                "FROM category " +
-                "WHERE AliasCategory = '"+libelleCategory+"';";
-        Cursor c = sqLiteDatabase.rawQuery(query, null);
-        if (c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return -1;
-        }
-    }
-
-    //TODO MOVE TO DAO
-    public int getIdOfCountry(SQLiteDatabase sqLiteDatabase, String libelleCountry){
-        String query = "SELECT idCountry " +
-                "FROM country " +
-                "WHERE AliasCountry = '"+libelleCountry+"';";
-        Cursor c = sqLiteDatabase.rawQuery(query, null);
-        if (c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return -1;
-        }
-    }
 }
