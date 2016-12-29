@@ -3,10 +3,8 @@ package com.esiea.bauvic.inf4041_baudrier_vic.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-
 
 import com.esiea.bauvic.inf4041_baudrier_vic.R;
 
@@ -29,7 +27,5 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
     }
 }

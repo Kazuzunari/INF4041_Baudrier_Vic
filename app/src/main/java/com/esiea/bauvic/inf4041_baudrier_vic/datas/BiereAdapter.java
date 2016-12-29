@@ -36,7 +36,7 @@ public class BiereAdapter extends RecyclerView.Adapter<BiereAdapter.BiereViewHol
         biereViewHolder.country.setText(b.getCountry());
         biereViewHolder.dateCreation.setText(b.getDateCreation());
         biereViewHolder.description.setText(b.getDescription());
-        biereViewHolder.note.setText(""+b.getNote());
+        //biereViewHolder.note.setText(b.getNote());
         //biereViewHolder.photoPath.setText(b.getPhotoPath());
     }
 
