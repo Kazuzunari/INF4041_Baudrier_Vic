@@ -1,5 +1,7 @@
 package com.esiea.bauvic.inf4041_baudrier_vic.db_handling;
 
+import com.esiea.bauvic.inf4041_baudrier_vic.datas.Biere;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -7,6 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +60,7 @@ public class UsefullVrac {
 	public static void main(String[] args) {
 		try {
 			//Téléchargement du fichier via HTTP
+            ArrayList<Biere> listeBiere = new ArrayList<Biere>();
 			URL website = new URL("http://binouze.fabrigli.fr/bieres.json");
 			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
 			FileOutputStream fos = new FileOutputStream(path);
@@ -82,9 +86,10 @@ public class UsefullVrac {
 				String dateCreation = jo.getString("created_at");
 				String description = jo.getString("description");
 				String name = jo.getString("name");
-				String note = jo.getString("note");
-				
-				//Biere b = new Biere();
+				int note = Integer.getInteger(jo.getString("note"));
+
+				Biere b = new Biere(idCategory, idCountry,dateCreation, description, name, note, null);
+                listeBiere.add(b);
 			}
 			
 			
