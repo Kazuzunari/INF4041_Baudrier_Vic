@@ -17,14 +17,20 @@
 
 package com.esiea.bauvic.inf4041_baudrier_vic.main;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ViewAnimator;
 
 import com.esiea.bauvic.inf4041_baudrier_vic.R;
+import com.esiea.bauvic.inf4041_baudrier_vic.datas.Biere;
+import com.esiea.bauvic.inf4041_baudrier_vic.datas.BiereAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple launcher activity containing a summary sample description, sample log and a custom
@@ -33,24 +39,54 @@ import com.esiea.bauvic.inf4041_baudrier_vic.R;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class MainActivity extends AppCompatActivity {
-
-    public static final String TAG = "MainActivity";
-
-    // Whether the Log Fragment is currently shown
-    private boolean mLogShown;
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_my);
 
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            RecyclerViewFragment fragment = new RecyclerViewFragment();
-            transaction.replace(R.id.sample_content_fragment, fragment);
-            transaction.commit();
+        setContentView(R.layout.activity_main);
+        RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+
+        BiereAdapter b = new BiereAdapter(createList(30));
+        recList.setAdapter(b);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private List<Biere> createList(int size) {
+
+        List<Biere> result = new ArrayList<>();
+        for (int i=1; i <= size; i++) {
+            Biere b = new Biere("cat" + i, "country"+i, "date"+i, "blabla"+i, "bière"+i, i % 6, "photo"+i);
+            result.add(b);
+
+        }
+
+        return result;
     }
 
 
