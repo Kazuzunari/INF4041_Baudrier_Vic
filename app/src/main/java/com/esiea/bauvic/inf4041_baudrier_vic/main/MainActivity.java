@@ -32,19 +32,12 @@ import com.esiea.bauvic.inf4041_baudrier_vic.datas.BiereAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple launcher activity containing a summary sample description, sample log and a custom
- * {@link android.support.v4.app.Fragment} which can display a view.
- * <p>
- * For devices with displays with a width of 720dp or greater, the sample log is always visible,
- * on other devices it's visibility is controlled by an item on the Action Bar.
- */
+
 public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_my);
 
         setContentView(R.layout.activity_main);
         RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
@@ -67,9 +60,6 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
