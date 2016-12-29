@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(dhb);
 
         int test1 = biereDAO.getIdOfCategory(dhb,"Bavaroise");
-        int test2 = biereDAO.getIdOfCountry(dhb,"Belgique");
+        int test2 = biereDAO.getIdOfCountry(dhb,"Inconnu");
         System.out.println("Test idCategory : "+test1);
         System.out.println("Test idCountry : "+test2);
 
