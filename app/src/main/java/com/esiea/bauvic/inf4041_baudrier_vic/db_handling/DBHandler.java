@@ -1,7 +1,9 @@
 package com.esiea.bauvic.inf4041_baudrier_vic.db_handling;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -15,18 +17,18 @@ public class DBHandler extends SQLiteOpenHelper{
 
 
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Biere.db";
-    private static final String CREATE_TABLE_COUNTRY = "CREATE TABLE \"COUNTRY\" (\n" +
+    public static final String DATABASE_NAME = "BiereQuiRoule";
+    private static final String CREATE_TABLE_COUNTRY = "CREATE OR REPLACE TABLE \"COUNTRY\" (\n" +
             "\t`idCountry`\tINTEGER NOT NULL,\n" +
             "\t`AliasCountry`\tTEXT NOT NULL UNIQUE,\n" +
             "\tPRIMARY KEY(`idCountry`)\n" +
             ");";
-    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE \"CATEGORY\" (\n" +
+    private static final String CREATE_TABLE_CATEGORY = "CREATE OR REPLACE TABLE \"CATEGORY\" (\n" +
             "\t`idCategory`\tINTEGER NOT NULL,\n" +
             "\t`AliasCategory`\tTEXT NOT NULL UNIQUE,\n" +
             "\tPRIMARY KEY(`idCategory`)\n" +
             ");";
-    private static final String CREATE_TABLE_BIERE = "CREATE TABLE \"BIERE\" (\n" +
+    private static final String CREATE_TABLE_BIERE = "CREATE OR REPLACE TABLE \"BIERE\" (\n" +
             "\t`idBiere`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
             "\t`note`\tINTEGER NOT NULL DEFAULT 0,\n" +
             "\t`name`\tTEXT NOT NULL UNIQUE,\n" +
@@ -37,34 +39,8 @@ public class DBHandler extends SQLiteOpenHelper{
             "\t`idCountry`\tINTEGER\n" +
             ");";
 
-    private static final String INSERT_COUNTRY = "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (1,'Test');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (2,'Inconnu');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (3,'Belgique');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (4,'Pays-bas');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (5,'Allemagne');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (6,'Brésil');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (7,'République Tchèque');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (8,'Espagne');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (9,'USA');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (10,'Italie');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (11,'Japon');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (12,'Nord de la France');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (13,'Mexique');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (14,'Inde');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (15,'Hollande');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (16,'Irlande');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (17,'Chine');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (18,'Amérique(Indétérminée)');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (19,'Thailande');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (20,'Corée');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (21,'Grande-Bretagne');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (22,'Slovénnie');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (23,'Angleterre');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (24,'Pays de Galle');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (25,'Ecosse');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (26,'Amérindien');\n" +
-            "INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (27,'Danemark');"
-            ;
+
+
     private static final String INSERT_CATEGORY = "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (1,'Blonde');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (2,'Blanche');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (3,'Kriek');\n" +
@@ -77,7 +53,7 @@ public class DBHandler extends SQLiteOpenHelper{
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (10,'Fruit Beer');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (11,'India Pale Ale');\n" +
             "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (12,'Pale Ale');\n" +
-            "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (13,'Irish Stout');"
+            "INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (13,'Irish Stout'); COMMIT;"
             ;
 
     public DBHandler(Context context) {
@@ -86,13 +62,67 @@ public class DBHandler extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_TABLE_CATEGORY);
-        sqLiteDatabase.execSQL(INSERT_CATEGORY);
-        sqLiteDatabase.execSQL(CREATE_TABLE_COUNTRY);
-        sqLiteDatabase.execSQL(INSERT_COUNTRY);
-        sqLiteDatabase.execSQL(CREATE_TABLE_BIERE);
-        //this.getClass().getClassLoader().getResource("").openStream().re;
+        try{
+            sqLiteDatabase.execSQL(CREATE_TABLE_CATEGORY);
+            //sqLiteDatabase.execSQL(INSERT_CATEGORY);
+            sqLiteDatabase.execSQL("INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (1,'Blonde');");
+            sqLiteDatabase.execSQL("INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (2,'Blanche');");
+            sqLiteDatabase.execSQL("INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (3,'Kriek');");
+            sqLiteDatabase.execSQL("INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (4,'Doubme');");
+            sqLiteDatabase.execSQL("INSERT INTO `CATEGORY` (idCategory,AliasCategory) VALUES (5,'Bavaroise');");
+            sqLiteDatabase.execSQL(CREATE_TABLE_COUNTRY);
+
+            //TODO README IF this doesn't work why does the above doesn't
+            ContentValues cv = new ContentValues();
+            cv.put("idCountry", 1);
+            cv.put("AliasCountry", "'Test'");
+            sqLiteDatabase.insert("country", null, cv);
+
+            ContentValues cv2 = new ContentValues();
+            cv2.put("idCountry", 2);
+            cv2.put("AliasCountry", "Inconnu");
+            sqLiteDatabase.insert("country", null, cv2);
+            /*sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (1,'Test');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (2,'Inconnu');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (3,'Belgique')");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (4,'Pays-bas');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (5,'Allemagne');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (6,'Brésil');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (7,'République Tchèque');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (8,'Espagne');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (9,'USA');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (10,'Italie');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (11,'Japon');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (12,'Nord de la France');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (13,'Mexique');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (14,'Inde');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (15,'Hollande');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (16,'Irlande');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (17,'Chine');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (18,'Amérique(Indétérminée)');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (19,'Thailande');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (20,'Corée');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (21,'Grande-Bretagne');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (22,'Slovénnie');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (23,'Angleterre');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (24,'Pays de Galle');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (25,'Ecosse');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (26,'Amérindien');");
+            sqLiteDatabase.execSQL("INSERT INTO `COUNTRY` (idCountry,AliasCountry) VALUES (27,'Danemark');");
+*/
+            sqLiteDatabase.execSQL(CREATE_TABLE_BIERE);
+            //this.getClass().getClassLoader().getResource("").openStream().re;
+            //System.out.println(sqLiteDatabase.inTransaction());
+        } catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
     }
+
+    /*
+    public void onOpen(SQLiteDatabase sqLiteDatabase){
+       // TODO sqLiteDatabase = getWritableDatabase(); //has to be moved the the mainactivity onOpen
+    }
+    */
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int nextVersion) {
@@ -101,51 +131,9 @@ public class DBHandler extends SQLiteOpenHelper{
     }
 
     private void destroyEveryting (SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS category");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS country");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS biere");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS category CASCADE");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS country CASCADE");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS biere CASCADE");
     }
 
-    //TODO MOVE TO DAO
-    public void insertNewBiere(SQLiteDatabase sqLiteDatabase, Biere biere){
-        StringBuilder sb = new StringBuilder();
-        String insertQuery = "insert into `biere` (" +
-                "note, name, description, dateCreation, pathPhoto, idCategory, idCountry) " +
-                "VALUES ("
-                + biere.getNote()+",'"
-                + biere.getName()+"','"
-                + biere.getDescription()+"','"
-                + biere.getDateCreation()+"','"
-                + biere.getPhotoPath()+"',"
-                + getIdOfCategory(sqLiteDatabase, biere.getCategory())+","
-                + getIdOfCountry(sqLiteDatabase, biere.getCategory())
-                + ");";
-        sqLiteDatabase.execSQL(insertQuery);
-    }
-
-    //TODO MOVE TO DAO
-    public int getIdOfCategory(SQLiteDatabase sqLiteDatabase, String libelleCategory){
-        String query = "SELECT idCategory " +
-                "FROM category " +
-                "WHERE AliasCategory = '"+libelleCategory+"';";
-        Cursor c = sqLiteDatabase.rawQuery(query, null);
-        if (c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return -1;
-        }
-    }
-
-    //TODO MOVE TO DAO
-    public int getIdOfCountry(SQLiteDatabase sqLiteDatabase, String libelleCountry){
-        String query = "SELECT idCountry " +
-                "FROM country " +
-                "WHERE AliasCountry = '"+libelleCountry+"';";
-        Cursor c = sqLiteDatabase.rawQuery(query, null);
-        if (c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return -1;
-        }
-    }
 }
