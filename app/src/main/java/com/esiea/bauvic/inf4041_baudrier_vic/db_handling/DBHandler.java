@@ -9,9 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.esiea.bauvic.inf4041_baudrier_vic.datas.Biere;
 
-/**
- * Created by Dearth on 13/12/2016.
- */
 
 public class DBHandler extends SQLiteOpenHelper{
 
