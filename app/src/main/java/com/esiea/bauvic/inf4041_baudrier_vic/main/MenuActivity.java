@@ -35,6 +35,16 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        Button dummy = (Button) findViewById(R.id.dummy);
+        dummy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(MenuActivity.this, DummyBeer.class);
+                startActivity(intent);
+            }
+        });
+
         Button toast = (Button) findViewById(R.id.toast);
 
     }
