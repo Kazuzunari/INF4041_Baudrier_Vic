@@ -18,6 +18,8 @@
 package com.esiea.bauvic.inf4041_baudrier_vic.main;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,9 +29,11 @@ import android.view.MenuItem;
 import com.esiea.bauvic.inf4041_baudrier_vic.R;
 import com.esiea.bauvic.inf4041_baudrier_vic.datas.Biere;
 import com.esiea.bauvic.inf4041_baudrier_vic.datas.BiereAdapter;
+import com.esiea.bauvic.inf4041_baudrier_vic.db_handling.UsefullVrac;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class BeerActivity extends Activity {
@@ -45,9 +49,17 @@ public class BeerActivity extends Activity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        User
-        BiereAdapter b = new BiereAdapter(createList(30));
-        recList.setAdapter(b);
+        UsefullVrac parser = new UsefullVrac();
+        ArrayList<Biere> b = null;
+        try{
+            b = parser.execute().get();
+        }
+        catch(ExecutionException | InterruptedException i){
+            i.printStackTrace();
+        }
+
+        BiereAdapter bieres = new BiereAdapter(b);
+        recList.setAdapter(bieres);
     }
 
     @Override

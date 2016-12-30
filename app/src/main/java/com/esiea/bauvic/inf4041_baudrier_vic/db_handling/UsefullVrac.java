@@ -1,12 +1,26 @@
 package com.esiea.bauvic.inf4041_baudrier_vic.db_handling;
 
+import android.app.Activity;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.IBinder;
+
 import com.esiea.bauvic.inf4041_baudrier_vic.datas.Biere;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
@@ -15,19 +29,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UsefullVrac {
+public class UsefullVrac extends AsyncTask<Void, Void, ArrayList<Biere>> {
 
-	private static final String path = "C:/users/Benjamin/Pictures/bieres.json";
-
+	//private static final String path = "C:/Users/Dearth/bieres.json";
 	private static final String sqlRequestListCategory = "SELECT idCategory, AliasCategory FROM category";
 	private static final String sqlRequestListCountry = "SELECT idCountry, Aliascountry FROM country";
 
 	//BLOCK REQUEST NAME
-	private static String paramName= "THIS SHIT IS PART OF OUR FUNCTION";
+	private static String paramName = "THIS SHIT IS PART OF OUR FUNCTION";
 	private static final String sqlRequestBiereFromName =
 			"SELECT b.* "
 					+ "FROM biere b "
-					+ "WHERE "+paramName+" LIKE b.name ";
+					+ "WHERE " + paramName + " LIKE b.name ";
 	//Si la valeur d'id de categ ou country, en fonction, n'est pas null
 	/*private static String paramIdCategory = "THIS SHIT IS PART OF OUR FUNCTION";
 	private static final String sqlRequestBiereCategory =
@@ -44,7 +57,6 @@ public class UsefullVrac {
 			+ "WHERE b.idCountry = " + paramIdCountry;*/
 
 
-
 	//BLOCK REQUEST OTHER
 	private static String paramNoteOther = "THIS SHIT IS PART OF OUR FUNCTION";
 	private static String paramCategoryOther = "THIS SHIT IS PART OF OUR FUNCTION";
@@ -52,15 +64,62 @@ public class UsefullVrac {
 	private static final String sqlRequestBiereFromOther =
 			"SELECT * "
 					+ "FROM biere "
-					+ "WHERE idCountry = "+paramCountryOther+" "
-					+ "AND idCategory = "+paramCategoryOther+" "
-					+ "AND note = "+paramName+" ";
+					+ "WHERE idCountry = " + paramCountryOther + " "
+					+ "AND idCategory = " + paramCategoryOther + " "
+					+ "AND note = " + paramName + " ";
 
-
-	public static void loadJSON(String[] args) {
+	@Override
+	protected ArrayList<Biere> doInBackground(Void... v) {
+		ArrayList<Biere> listeBiere = null;
 		try {
 			//Téléchargement du fichier via HTTP
-			ArrayList<Biere> listeBiere = new ArrayList<Biere>();
+			listeBiere = new ArrayList<Biere>();
+			URL website = new URL("http://binouze.fabrigli.fr/bieres.json");
+			HttpURLConnection con = (HttpURLConnection) website.openConnection();
+			con.setRequestMethod("GET");
+			con.connect();
+			InputStream truc = con.getInputStream();
+			//Preparation du parsing : THERE'S THE PROBLEM
+			byte[] buffer = new byte[con.getContentLength()];
+			truc.read(buffer);
+
+			String jsonContent = String.valueOf(buffer);
+
+			//On génère les tables de correspondance des id
+			//TODO store in a MAP with id as key sqlRequestListCategory
+			//TODO store in a MAP with id as key sqlRequestListCountry
+
+			//Création de la bière par itération sur le JSON
+			JSONArray jarray = new JSONArray(jsonContent);
+			for (int i = 0; i < jarray.length(); i++) {
+				JSONObject jo = (JSONObject) jarray.get(i);
+				String idCategory = jo.getString("category_id");
+				String idCountry = jo.getString("country_id");
+				String dateCreation = jo.getString("created_at");
+				String description = jo.getString("description");
+				String name = jo.getString("name");
+				int note = Integer.getInteger(jo.getString("note"));
+
+				Biere b = new Biere(idCategory, idCountry, dateCreation, description, name, note, null);
+				listeBiere.add(b);
+			}
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listeBiere;
+	}
+
+	/*
+	public ArrayList<Biere> loadJSON() {
+		ArrayList<Biere> listeBiere = null;
+		try {
+			//Téléchargement du fichier via HTTP
+			listeBiere = new ArrayList<Biere>();
 			URL website = new URL("http://binouze.fabrigli.fr/bieres.json");
 			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
 			FileOutputStream fos = new FileOutputStream(path);
@@ -99,6 +158,7 @@ public class UsefullVrac {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return listeBiere;
 	}
-
+	*/
 }

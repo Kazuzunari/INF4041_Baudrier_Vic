@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.esiea.bauvic.inf4041_baudrier_vic.R;
@@ -21,6 +23,9 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
         Button button = (Button) findViewById(R.id.bList);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,7 +34,20 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+
+        Button toast = (Button) findViewById(R.id.toast);
+
+    }
+
+    public void toast(View tst)
+    {
+        Toast.makeText(getApplicationContext(),getString(R.string.app_name) + " toast done", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.options, menu);
+        return true;
     }
 }
