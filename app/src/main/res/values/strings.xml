@@ -1,4 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">INF4041_Baudrier_Vic</string>
-    <string name="api_key"></string>
+
+    <string name="app_name">Biiru</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
